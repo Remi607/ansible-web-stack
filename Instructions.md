@@ -8,7 +8,7 @@ Backend 2 192.168.1.138
 VIP for HA in the playbook set to 192.168.1.140 (will be installed)
 
 Network connectivity between all nodes
-SSH access to all servers with root & pass 
+SSH access to all servers with root & pass, user admin001 added without specified password and sudo privileges.
 
 A machine to run below playbooks and commands with ansible installed, with SSH access to the 4VMS mentioned above. 
 
