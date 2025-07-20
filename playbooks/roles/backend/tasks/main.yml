@@ -20,9 +20,9 @@
     group: apache
     mode: '0644'
 
-- name: Download Tomcat
-  get_url:
-    url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.107/bin/apache-tomcat-9.0.107.tar.gz
+- name: Copy Tomcat archive to target
+  copy:
+    src: apache-tomcat-9.0.107.tar.gz
     dest: /opt/tomcat.tar.gz
 
 - name: Extract Tomcat
@@ -59,15 +59,6 @@
     owner: tomcat
     group: tomcat
     mode: '0644'
-
-- name: Copy systemd service file for Tomcat
-  copy:
-    src: tomcat.service
-    dest: /etc/systemd/system/tomcat.service
-    owner: root
-    group: root
-    mode: '0644'
-  notify: Reload systemd
 
 - name: Copy systemd service file for Tomcat
   copy:

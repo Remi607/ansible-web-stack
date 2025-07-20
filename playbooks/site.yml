@@ -1,16 +1,14 @@
-- hosts: all
+---
+- name: Configure backend servers
+  hosts: backends
   become: yes
-
-- hosts: all
-  roles:
-    - common
-
-- hosts: backends
   roles:
     - backend
 
-- hosts: haproxy
-  gather_facts: no
+- name: Configure HAProxy servers
+  hosts: haproxy
+  become: yes
+  gather_facts: yes
   vars:
     keepalived_interface: eth0
   roles:

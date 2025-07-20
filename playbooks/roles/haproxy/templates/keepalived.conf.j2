@@ -14,30 +14,30 @@ vrrp_script chk_haproxy {
 }
 
 vrrp_instance VI_01 {
-    interface {{ ansible_default_ipv4.interface | default('eth0') }}
+    interface {{ ansible_default_ipv4.interface | default(keepalived_interface | default('eth0')) }}
     state {{ 'MASTER' if inventory_hostname == groups['haproxy'][0] else 'BACKUP' }}
-    virtual_router_id 51
-    priority {{ 101 if inventory_hostname == groups['haproxy'][0] else 100 }}
+    virtual_router_id {{ keepalived_virtual_router_id | default(51) }}
+    priority {{ keepalived_priority | default(101 if inventory_hostname == groups['haproxy'][0] else 100) }}
     advert_int 1
-    unicast_src_ip {{ ansible_default_ipv4.address }}
+    unicast_src_ip {{ ansible_default_ipv4.address | default(ansible_host) }}
     unicast_peer {
         {% for host in groups['haproxy'] %}
         {% if host != inventory_hostname %}
-        {{ hostvars[host]['ansible_default_ipv4']['address'] }}
+        {{ hostvars[host]['ansible_default_ipv4']['address'] | default(hostvars[host]['ansible_host']) }}
         {% endif %}
         {% endfor %}
     }
     authentication {
         auth_type PASS
-        auth_pass securepass
+         auth_pass {{ keepalived_auth_pass | default('securepass') }}
     }
     virtual_ipaddress {
-        192.168.1.140/24 dev {{ ansible_default_ipv4.interface | default('eth0') }}
+        {{ keepalived_vip | default('192.168.1.140/24') }} dev {{ ansible_default_ipv4.interface | default(keepalived_interface | default('eth0')) }}
     }
     track_script {
         chk_haproxy
     }
-    notify_master "/bin/echo '$(date) MASTER for VIP 192.168.1.140' >> /var/log/keepalived-status.log"
-    notify_backup "/bin/echo '$(date) BACKUP for VIP 192.168.1.140' >> /var/log/keepalived-status.log"
-    notify_fault "/bin/echo '$(date) FAULT for VIP 192.168.1.140' >> /var/log/keepalived-status.log"
+    notify_master "/bin/echo '$(date) MASTER for VIP {{ keepalived_vip | default('192.168.1.140') }}' >> /var/log/keepalived-status.log"
+    notify_backup "/bin/echo '$(date) BACKUP for VIP {{ keepalived_vip | default('192.168.1.140') }}' >> /var/log/keepalived-status.log"
+    notify_fault "/bin/echo '$(date) FAULT for VIP {{ keepalived_vip | default('192.168.1.140') }}' >> /var/log/keepalived-status.log"
 }

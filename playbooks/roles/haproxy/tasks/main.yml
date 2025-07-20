@@ -16,7 +16,7 @@
     openssl req -x509 -nodes -days 365 -newkey rsa:2048
     -keyout /etc/haproxy/ssl/selfsigned.key
     -out /etc/haproxy/ssl/selfsigned.crt
-    -subj "/CN=192.168.1.136"
+    -subj "/CN=localhost"
   args:
     creates: /etc/haproxy/ssl/selfsigned.crt
 
