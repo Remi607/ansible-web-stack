@@ -14,7 +14,8 @@ A machine to run below playbooks and commands with ansible installed, with SSH a
 
 1. Generate keyair: ssh-keygen -t rsa -b 4096
 2. Get the public key: cat ~/.ssh/id_rsa.pub
-3. Push the public key to other servers (replace Public key with your generated): 
+3. Update inventory/host.ini file line 11 with your location of the private_key_file
+4. Push the public key to other servers (replace Public key with your generated):  
 
 for ip in 192.168.1.{136..139}; do
   ssh root@$ip <<'EOF'
